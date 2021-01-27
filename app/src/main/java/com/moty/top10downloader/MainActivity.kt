@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
                 return rssFeed
             }
 
+            //using the url reader uses the bit reader
             private fun downloadXML(urlPath: String?) : String {
                 return URL(urlPath).readText()
             }
