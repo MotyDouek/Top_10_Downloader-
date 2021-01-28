@@ -10,6 +10,23 @@ import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
 
+class FeedEntry {
+    var name: String =""
+    var artist: String = ""
+    var releaseDate: String = ""
+    var summary: String = ""
+    var imageURL: String = ""
+
+    override fun toString(): String {
+        return """
+            name = $name
+            artist = $artist
+            releaseDate = $releaseDate
+            imageURL = $imageURL
+            """.trimIndent()
+    }
+}
+
 class MainActivity : AppCompatActivity() {
 
     private val TAG = "MainActivity"
