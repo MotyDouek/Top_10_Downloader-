@@ -24,7 +24,7 @@ class ParseApplications {
             var eventType = xpp.eventType
             var currentRecord = FeedEntry()
             while (eventType != XmlPullParser.END_DOCUMENT){
-                val tagName = xpp.name.toLowerCase()
+                val tagName = xpp.name?.toLowerCase()
                 when(eventType){
 
                     XmlPullParser.START_TAG -> {
