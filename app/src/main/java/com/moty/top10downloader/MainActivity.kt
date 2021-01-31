@@ -1,9 +1,12 @@
 package com.moty.top10downloader
 
+import android.content.Context
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ArrayAdapter
+import android.widget.ListView
 import java.io.IOException
 import java.lang.Exception
 import java.net.HttpURLConnection
@@ -42,14 +45,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private class DownloadData : AsyncTask<String, Void, String>() {
+        private class DownloadData(context: Context, listView: ListView) : AsyncTask<String, Void, String>() {
             private val TAG = "DownloadData"
+
+            var propContext: Context = context
+            var propListView : ListView = listView
 
             override fun onPostExecute(result: String) {
                 super.onPostExecute(result)
 //                Log.d(TAG, "onPostExecute: parameter is $result")
                 val parseApplications = ParseApplications()
                 parseApplications.parse(result)
+
+                val arrayAdaptor = ArrayAdapter<FeedEntry>()
             }
 
             override fun doInBackground(vararg url: String?): String {
