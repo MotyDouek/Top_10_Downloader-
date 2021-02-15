@@ -5,6 +5,8 @@ import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import java.io.IOException
@@ -35,20 +37,49 @@ class MainActivity : AppCompatActivity() {
 
     private val TAG = "MainActivity"
 
-    private val downloadData by lazy { DownloadData(this, findViewById(R.id.xmlListView)) }
+    private var downloadData: DownloadData? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Log.d(TAG, "onCreate called")
-        downloadData.execute("http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=10/xml")
+        downloadUrl("http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=10/xml")
         Log.d(TAG, "onCreate: done")
+    }
+
+    private fun downloadUrl (feedUrl: String) {
+        Log.d(TAG, "downloadUrl called")
+        downloadData = DownloadData(this, findViewById(R.id.xmlListView))
+        downloadData?.execute(feedUrl)
+        Log.d(TAG, "downloadUrl: done")
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.feeds_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val feedUrl: String
+
+        when(item.itemId) {
+            R.id.mnuFree ->
+                feedUrl = "http://ax.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topfreeapplications/limit=10/xml"
+            R.id.mnuPaid ->
+                feedUrl = "http://mzstoreservices-int-st.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/toppaidapplications/limit=5/xml"
+            R.id.mnuSongs ->
+                feedUrl = "http://mzstoreservices-int-st.itunes.apple.com/WebObjects/MZStoreServices.woa/ws/RSS/topsongs/limit=5/xml"
+            else ->
+                return super.onOptionsItemSelected(item)
+        }
+
+        downloadUrl(feedUrl)
+        return true
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        downloadData.cancel(true)
+        downloadData?.cancel(true)
     }
 
     companion object {
